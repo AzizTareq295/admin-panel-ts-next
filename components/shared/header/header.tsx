@@ -66,9 +66,9 @@ const Header: React.FC = () => {
               'aria-labelledby': 'basic-button',
             }}
           >
-            <MenuItem sx={{fontSize: '14px'}} onClick={handleClose}>Profile</MenuItem>
-            <MenuItem sx={{fontSize: '14px'}} onClick={handleClose}>My account</MenuItem>
-            <MenuItem sx={{fontSize: '14px'}} onClick={handleClose}>Logout</MenuItem>
+            <MenuItem sx={{fontSize: '13px'}} onClick={handleClose}>Profile</MenuItem>
+            <MenuItem sx={{fontSize: '13px'}} onClick={handleClose}>My account</MenuItem>
+            <MenuItem sx={{fontSize: '13px'}} onClick={handleClose}>Logout</MenuItem>
           </Menu>
         </Toolbar>
       </Box>

@@ -1,18 +1,10 @@
 import React, { useState } from 'react'
 import { Collapse, List, ListItemButton, ListItemIcon, ListItemText, ListSubheader, Typography } from '@mui/material'
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
-import InventoryIcon from '@mui/icons-material/Inventory';
-import CategoryIcon from '@mui/icons-material/Category';
+import MenuLists from './MenuILists';
+import NavItem from './NavItem';
 
 const Sidebar: React.FC = () => {
-
-  const [open, setOpen] = React.useState<React.SetStateAction<boolean>>(false);
-
-  const handleClick = () => {
-    setOpen(!open);
-  };
 
   const sidebarLogoStyle = {
     minHeight: '64px',
@@ -40,35 +32,11 @@ const Sidebar: React.FC = () => {
             </ListSubheader>
           }
         >
-          <ListItemButton>
-            <ListItemIcon>
-              <DashboardIcon />
-            </ListItemIcon>
-            <ListItemText primary="Dashboard" />
-          </ListItemButton>
-          <ListItemButton>
-            <ListItemIcon>
-              <PeopleAltIcon />
-            </ListItemIcon>
-            <ListItemText primary="Users" />
-          </ListItemButton>
-          <ListItemButton onClick={handleClick}>
-            <ListItemIcon>
-              <InventoryIcon />
-            </ListItemIcon>
-            <ListItemText primary="Products" />
-            {open ? <ExpandLess /> : <ExpandMore />}
-          </ListItemButton>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <CategoryIcon />
-                </ListItemIcon>
-                <ListItemText primary="Category" />
-              </ListItemButton>
-            </List>
-          </Collapse>
+          {
+            MenuLists.map((menuItem, index) => (
+              <NavItem menuItem={menuItem} key={`menu-item-key-${index}`} />
+            ))
+          }
         </List>
       </div>
     </div>
