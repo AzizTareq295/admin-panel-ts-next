@@ -1,6 +1,5 @@
-import React, { useState } from 'react'
-import { Collapse, List, ListItemButton, ListItemIcon, ListItemText, ListSubheader, Typography } from '@mui/material'
-import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import React from 'react'
+import { List, Typography } from '@mui/material'
 import MenuLists from './MenuILists';
 import NavItem from './NavItem';
 
@@ -26,11 +25,11 @@ const Sidebar: React.FC = () => {
           sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
           component="nav"
           aria-labelledby="nested-list-subheader"
-          subheader={
-            <ListSubheader component="div" id="nested-list-subheader">
-              Nested List Items
-            </ListSubheader>
-          }
+          // subheader={
+          //   <ListSubheader component="div" id="nested-list-subheader">
+          //     Nested List Items
+          //   </ListSubheader>
+          // }
         >
           {
             MenuLists.map((menuItem, index) => (
