@@ -1,9 +1,7 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
-import TableRow from '@mui/material/TableRow';
 import TableHeader from './TableHeader';
 
 const tableContainerStyle = {
@@ -11,31 +9,21 @@ const tableContainerStyle = {
 }
 
 type TableProps = {
-  data: any[],
-  columns: string[],
+  rows: React.ReactNode[],
+  tableHeaders: string[],
 }
 
 
-const ThemeTable: React.FC<TableProps> = ({data, columns}) => {
+const ThemeTable: React.FC<TableProps> = ({rows, tableHeaders}) => {
+  
+  const tableRows = useMemo(() => rows, [rows])
+
   return (
     <TableContainer sx={tableContainerStyle}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHeader columns={columns}/>
+        <TableHeader columns={tableHeaders}/>
         <TableBody>
-          {data.map((item) => (
-            <TableRow
-              key={item.name}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-              <TableCell>
-                {item.name}
-              </TableCell>
-              <TableCell>{item.calories}</TableCell>
-              <TableCell>{item.fat}</TableCell>
-              <TableCell>{item.carbs}</TableCell>
-              <TableCell>{item.protein}</TableCell>
-            </TableRow>
-          ))}
+          {tableRows}
         </TableBody>
       </Table>
     </TableContainer>
