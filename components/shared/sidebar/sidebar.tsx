@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { List, Typography } from '@mui/material'
 import MenuLists from './MenuILists';
 import NavItem from './NavItem';
+import WindowSize from 'hooks/windowSize';
 
 const Sidebar: React.FC = () => {
+
+  const { windowWidth } = WindowSize();  
 
   const sidebarLogoStyle = {
     minHeight: '64px',
@@ -15,10 +18,17 @@ const Sidebar: React.FC = () => {
     paddingLeft: '1rem',
   }
 
+  const isSidebarCollapsed = useMemo(() => windowWidth < 1200, [windowWidth]);
+
   return (
-    <div className='sidebar'>
+    <div className={`sidebar ${isSidebarCollapsed ? 'collaps-sidebar': ''}`}>
       <div className='sidebar-header'>
-        <Typography variant='h4' sx={sidebarLogoStyle}>LOGO</Typography>
+        {
+          isSidebarCollapsed ?
+          <Typography variant='h4' sx={sidebarLogoStyle}>L</Typography>
+          :
+          <Typography variant='h4' sx={sidebarLogoStyle}>LOGO</Typography>
+        }
       </div>
       <div className='sidebar-menu'>
         <List
@@ -33,7 +43,7 @@ const Sidebar: React.FC = () => {
         >
           {
             MenuLists.map((menuItem, index) => (
-              <NavItem menuItem={menuItem} key={`menu-item-key-${index}`} />
+              <NavItem isSidebarCollapsed={isSidebarCollapsed} menuItem={menuItem} key={`menu-item-key-${index}`} />
             ))
           }
         </List>

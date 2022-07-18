@@ -3,6 +3,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import TableChartIcon from '@mui/icons-material/TableChart';
+import VerticalSplitIcon from '@mui/icons-material/VerticalSplit';
 import { MenuListType } from './interface/MenuLists';
 
 const MenuLists: MenuListType[] = [
@@ -27,6 +28,11 @@ const MenuLists: MenuListType[] = [
                 label: "Table",
                 icon: <TableChartIcon color='secondary' fontSize='small' />,
                 path: "/components/table"
+            },
+            {
+                label: "Form",
+                icon: <VerticalSplitIcon color='secondary' fontSize='small' />,
+                path: "/components/form"
             }
         ]
     }

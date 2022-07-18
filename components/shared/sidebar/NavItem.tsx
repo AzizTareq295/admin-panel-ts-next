@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
-import { Collapse, List, ListItemButton, ListItemIcon, ListItemText, ListSubheader, Typography } from '@mui/material'
+import { Collapse, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { MenuListType } from './interface/MenuLists';
 import Link from 'next/link';
+import CollapsItem from './CollapsItem';
 
 type PropType = {
-  menuItem: MenuListType
+  menuItem: MenuListType,
+  isSidebarCollapsed: boolean,
 }
 
 const MenuItemStyle = {
@@ -18,7 +20,7 @@ const MenuIconStyle = {
   minWidth: '30px',
 }
 
-const NavItem: React.FC<PropType> = ({menuItem}) => {
+const NavItem: React.FC<PropType> = ({menuItem, isSidebarCollapsed}) => {
 
   const [open, setOpen] = useState<React.SetStateAction<boolean>>(false);
 
@@ -27,6 +29,7 @@ const NavItem: React.FC<PropType> = ({menuItem}) => {
   };
 
   return (
+    !isSidebarCollapsed ?
     <>
       {
         menuItem.subMenu.length > 0 ?
@@ -67,6 +70,7 @@ const NavItem: React.FC<PropType> = ({menuItem}) => {
         ))
       }
     </>
+    : <CollapsItem menuItem={menuItem} />
   )
 }
 
