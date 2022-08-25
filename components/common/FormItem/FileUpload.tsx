@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CloseIcon from '@mui/icons-material/Close';
 import { makeStyles } from '@mui/styles';
@@ -11,7 +11,7 @@ type fileItemType = {
   name: string;
 }
 
-type fileItemsType = fileItemType[] | []
+type fileItemsType = fileItemType[]
  
 type FileUploadProps = {
   label: string;
@@ -44,7 +44,7 @@ const useStyles = makeStyles({
       width: '100%',
       height: '100%',
       position: 'absolute',
-    }
+    },
   },
   fileUploadBoxLabel: {
     fontSize: '14px',
@@ -54,7 +54,53 @@ const useStyles = makeStyles({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: '5px'
+    gap: '5px',
+
+    '& span': {
+      zIndex: 1
+    }
+  },
+  multipleFiles: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    width: '100%',
+    gap: '10px',
+    marginTop: '10px',
+
+    '& > div': {
+      width: '60px',
+      height: '60px',
+      cursor: 'pointer',
+
+      '& > div': {
+        width: '100%',
+        height: '100%',
+        boxShadow: '0px 0px 5px 0px #ccc',
+        borderRadius: '5px',
+        position: 'relative',
+
+        '& span': {
+          position: 'absolute',
+          right: 0,
+          top: 0,
+          background: '#656565',
+          lineHeight: 0,
+          color: '#fff',
+          borderRadius: '50%',
+          padding: '2px',
+          '& svg': {
+            fontSize: '16px'
+          }
+
+        },
+
+        '& img': {
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain'
+        }
+      }
+    }
   }
 })
 
@@ -64,13 +110,14 @@ const FileUpload: React.FC<FileUploadProps> = ({label, name, value, fileType="im
 
   const classes = useStyles();
 
+  const inputFile = useRef<HTMLInputElement>(null)
+
   const [fileItems, setFileItems] = useState<fileItemsType>([])
+  let items: fileItemType[] = []
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = (e.target as HTMLInputElement).files || []
-
     if (multiple) {
-      let items: fileItemsType = []
       for (let index = 0; index < files.length; index++) {
         const file = files[index];        
         const { name, size } = file
@@ -79,22 +126,19 @@ const FileUpload: React.FC<FileUploadProps> = ({label, name, value, fileType="im
         
         if (FileExtensions[fileType]?.includes(fileExtension)) {
           const fileReader = new FileReader()
-          fileReader.onload = (element: any) => {
-            console.log(element.target)
-            items.push({file: element.target.result, type: fileType, name})
+          fileReader.onloadend = (element: any) => {
+            items.push({file: element.target.result, type: fileType, name: name})
+            setFileItems(items)
           }
 
           fileReader.readAsDataURL(file)
         }
       }
-      console.log(items)
-      setFileItems(items)    
     }
     else{
       const file = files[0];
       if (file) {
         const { name, size } = file
-  
 
         const fileExtension = name.split('.').pop() || '';
   
@@ -108,9 +152,7 @@ const FileUpload: React.FC<FileUploadProps> = ({label, name, value, fileType="im
           setFileItems([{file: element.target.result, type: fileType, name}])
         }
 
-        fileReader.readAsDataURL(file)
-  
-        
+        fileReader.readAsDataURL(file)        
       }
       else{
         setFileItems([])
@@ -120,7 +162,24 @@ const FileUpload: React.FC<FileUploadProps> = ({label, name, value, fileType="im
     }
   }
 
-  console.log(fileItems)
+  const removeItem = (itemIndex: number) => {
+    let fileItemsCopy = [...fileItems]
+
+    fileItemsCopy.splice(itemIndex, 1)
+    setFileItems(fileItemsCopy)
+
+    if (fileItemsCopy.length === 0) {
+      items = []
+
+      inputFile.current?.value = ''
+    }
+    
+  }
+
+  const removeSingleItem = () => {
+    setFileItems([])
+    inputFile.current?.value = ''
+  }
 
 
   return (
@@ -130,7 +189,7 @@ const FileUpload: React.FC<FileUploadProps> = ({label, name, value, fileType="im
           (fileItems.length === 1 && !multiple) ?
           <div className={classes.fileUploadBoxLabel}>
             <span>{fileItems[0].name}</span>
-            <CloseIcon />
+            <span onClick={removeSingleItem}><CloseIcon /></span>
           </div>
           :
           <div className={classes.fileUploadBoxLabel}>
@@ -138,11 +197,11 @@ const FileUpload: React.FC<FileUploadProps> = ({label, name, value, fileType="im
             <span>{label}</span>
           </div>
         }
-        <input type="file" multiple={multiple} name={name} value={value} onChange={handleFile} />
+        <input ref={inputFile} type="file" multiple={multiple} name={name} value={value} onChange={handleFile} />
       </div>
       {
         (fileItems.length > 0 && multiple) &&
-        <div className=''>
+        <div className={classes.multipleFiles}>
           {
             fileItems.map((item: fileItemType, index: number) => (
               <div key={`file-item-${index}`}>
@@ -150,6 +209,7 @@ const FileUpload: React.FC<FileUploadProps> = ({label, name, value, fileType="im
                   item.type === "image" ?
                   <div>
                     <img src={item.file} alt="file-array" />
+                    <span onClick={()=> removeItem(index)}><CloseIcon /></span>
                   </div>
                   : ''
                 }

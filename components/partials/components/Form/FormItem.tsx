@@ -59,9 +59,8 @@ const FormItem: React.FC = () => {
         <Grid item xs={6}>
           <FileUpload 
             label="Profile Picture"
-            onChange={(e) => {console.log(e.target.value)}}
             name="profile_picture"
-            multiple={true}
+            multiple={false}
             fileType="image"
           />
         </Grid>
